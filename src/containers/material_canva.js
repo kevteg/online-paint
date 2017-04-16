@@ -4,19 +4,18 @@ import Paper from 'material-ui/Paper';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {Layer, Rect, Stage, Group} from 'react-konva';
-import {pencil_moved} from '../actions/index'
+import {pencil_moved, color_changed, brush_changed} from '../actions/index'
 
 class MatCanva extends Component{
     componentDidMount(){
-        this.context = this.refs.mycanva.getContext('2d');
-        this.context.strokeStyle = "#df4b26";
-        this.context.lineJoin = "round";
-        this.context.lineWidth = 5;
-        this.context.globalCompositeOperation = 'source-over';
+        this._context = this.refs.mycanva.getContext('2d'); 
+        this._context.lineJoin = "round";
+        this._context.lineWidth = 5;
     }
-
     constructor(props){
         super(props);
+        this.props.color_changed(Konva.Util.getRandomColor());
+        this.props.brush_changed('source-over');
         this.clicked = this.clicked.bind(this);
         this.moved = this.moved.bind(this);
         this.state = {draw: false};
@@ -27,16 +26,18 @@ class MatCanva extends Component{
         this.lastPointerPosition = {x:event.evt.clientX, y:event.evt.clientY};    
     }
     moved(event){
-        var x = event.evt.clientX;
-        var y = event.evt.clientY; 
          if(this.state.draw){
-             this.props.pencil_moved(x, y);
-            this.context.beginPath();
-            this.context.moveTo(this.lastPointerPosition.x, this.lastPointerPosition.y);
-            this.context.lineTo(x, y);
-            this.context.closePath();
-            this.context.stroke();
-            this.lastPointerPosition = {x:x, y:y};
+            //this._context.strokeStyle(this.props.color)
+            console.log(this.props.brush);
+            this._context.globalCompositeOperation = this.props.brush;
+            this.props.pencil_moved(event.evt.clientX, event.evt.clientY);
+            this._context.strokeStyle = this.props.color[0];
+            this._context.beginPath();
+            this._context.moveTo(this.lastPointerPosition.x, this.lastPointerPosition.y);
+            this._context.lineTo(this.props.pencil[0], this.props.pencil[1]);
+            this._context.closePath();
+            this._context.stroke();
+            this.lastPointerPosition = {x:this.props.pencil[0], y:this.props.pencil[1]};
          }
     }
 
@@ -56,11 +57,18 @@ class MatCanva extends Component{
                 );
     }
 }
-
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({pencil_moved}, dispatch)
+function mapStateToProps(state){
+    return {
+        pencil:state.pencil,
+        color:state.color,
+        brush:state.brush
+    };
 }
 
-export default connect(null, mapDispatchToProps)(MatCanva)
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({pencil_moved, color_changed, brush_changed}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MatCanva)
 
 

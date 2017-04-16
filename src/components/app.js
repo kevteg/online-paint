@@ -3,7 +3,7 @@ import MatCanva from '../containers/material_canva';
 import Bar from '../containers/bar';
 
 const style = {
-    height: 650,
+    height: 640,
     width: 1400,
 };
 

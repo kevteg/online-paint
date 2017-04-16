@@ -3,56 +3,67 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FontIcon from 'material-ui/FontIcon';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
-import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
-const iconStyles = {
-  marginRight: 24,
-};
-import {red500, yellow500, blue500} from 'material-ui/styles/colors';
-
-const favoritesIcon = <FontIcon className="material-icons">delete</FontIcon>;
-const nearbyIcon = <IconLocationOn />;
+import ActionDelete from 'material-ui/svg-icons/action/delete';
+import {red500, green500} from 'material-ui/styles/colors';
+import IconButton from 'material-ui/IconButton';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {pencil_moved} from '../actions/index'
+import {color_changed, brush_changed} from '../actions/index'
+import ActionEdit from 'material-ui/svg-icons/image/edit';
+import {Layer} from 'react-konva';
 
-const eraseIcon = <FontIcon className="material-icons" style={iconStyles} color={red500}>home</FontIcon>
+const styles = {
+  smallIcon: {
+    width: 36,
+    height: 36,
+  },
+  small: {
+    width: 72,
+    height: 72,
+    padding: 16,
+  },
+};
 
 class Bar extends Component{
-state = {
-    selectedIndex: 0,
-  };
-
+  constructor(props){
+      super(props);
+      this.changeColor = this.changeColor.bind(this);
+      this.changePencilType = this.changePencilType.bind(this);
+  }
+  changePencilType(){
+      console.log(this.props.brush);
+      this.props.brush_changed((this.props.brush == 'source-over')?'destination-out':'source-over');
+  }
+  changeColor(){
+      this.props.color_changed(Konva.Util.getRandomColor());
+      console.log(this.props.color);
+  }
   render() {
     return (
-                     <MuiThemeProvider>
-      <Paper zDepth={1}>
-        <BottomNavigation selectedIndex={this.state.selectedIndex}>
-          <BottomNavigationItem
-            label="Borrar todo"
-            icon={eraseIcon} 
-          />
-          <BottomNavigationItem
-            label="Borrador"
-            icon={favoritesIcon}
-       
-          />
-          <BottomNavigationItem
-            label="Cambiar color"
-            icon={nearbyIcon}
-      
-          />
-        </BottomNavigation>
+    <MuiThemeProvider>
+      <Paper zDepth={4}>
+    <IconButton  iconStyle={styles.smallIcon}style={styles.small} tooltip="Borrador">
+      <ActionDelete onClick={this.changePencilType} color={red500} />
+    </IconButton>
+    <IconButton iconStyle={styles.smallIcon} style={styles.small} tooltip="Color">
+      <ActionEdit onClick={this.changeColor} color={green500} />
+    </IconButton>
       </Paper>
-                     </MuiThemeProvider>
+    </MuiThemeProvider>
     );
   }
 }
-/*
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({pencil_moved}, dispatch)
+
+function mapStateToProps(state){
+    return {
+        pencil:state.pencil,
+        color:state.color,
+        brush:state.brush
+    }
 }
 
-export default connect(null, mapDispatchToProps)(MatCanva)
-*/
-export default Bar;
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({color_changed, brush_changed}, dispatch)
+}
 
+export default connect(mapStateToProps, mapDispatchToProps)(Bar);

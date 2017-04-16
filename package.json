@@ -29,6 +29,7 @@
     "axios": "^0.16.1",
     "babel-preset-stage-1": "^6.1.18",
     "konva": "^1.5.0",
+    "material-design-icons": "^3.0.1",
     "react": "~15.5.1",
     "react-dom": "~15.5.0",
     "react-konva": "^1.1.3",
