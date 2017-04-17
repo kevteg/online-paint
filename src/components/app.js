@@ -3,8 +3,8 @@ import MatCanva from '../containers/material_canva';
 import Bar from '../containers/bar';
 
 const style = {
-    height: 640,
-    width: 1400,
+    height: 550,
+    width: 1200,
 };
 
 export default class App extends Component{

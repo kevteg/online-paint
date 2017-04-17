@@ -4,7 +4,7 @@ import FontIcon from 'material-ui/FontIcon';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 import ActionDelete from 'material-ui/svg-icons/action/delete';
-import {red500, green500} from 'material-ui/styles/colors';
+import {red500, yellow800} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -29,10 +29,12 @@ class Bar extends Component{
       super(props);
       this.changeColor = this.changeColor.bind(this);
       this.changePencilType = this.changePencilType.bind(this);
+      this.state = {tip:"Borrar"};
   }
   changePencilType(){
       console.log(this.props.brush);
       this.props.brush_changed((this.props.brush == 'source-over')?'destination-out':'source-over');
+      this.setState({tip:(this.state.tip=='Borrar'?'Escribir':'Borrar')}); 
   }
   changeColor(){
       this.props.color_changed(Konva.Util.getRandomColor());
@@ -42,11 +44,13 @@ class Bar extends Component{
     return (
     <MuiThemeProvider>
       <Paper zDepth={4}>
-    <IconButton  iconStyle={styles.smallIcon}style={styles.small} tooltip="Borrador">
+    <IconButton  iconStyle={styles.smallIcon}style={styles.small} tooltip={this.state.tip}>
+    { this.state.tip == 'Borrar' ? 
       <ActionDelete onClick={this.changePencilType} color={red500} />
+ :     <ActionEdit onClick={this.changePencilType} color={yellow800} />}
     </IconButton>
     <IconButton iconStyle={styles.smallIcon} style={styles.small} tooltip="Color">
-      <ActionEdit onClick={this.changeColor} color={green500} />
+      <ActionEdit onClick={this.changeColor} color={this.props.color[0]} />
     </IconButton>
       </Paper>
     </MuiThemeProvider>
