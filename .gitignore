@@ -3,5 +3,6 @@ bundle.js
 npm-debug.log
 
 # IntelliJ
-*.iml
-/.idea
+*.swp
+/backend/.git
+

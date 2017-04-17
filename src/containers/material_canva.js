@@ -14,7 +14,7 @@ class MatCanva extends Component{
         this._context.lineWidth = 5;
     }
     constructor(props){
-        super(props);
+        super(props); 
         this.props.color_changed(Konva.Util.getRandomColor());
         this.props.brush_changed('source-over');
         this.clicked = this.clicked.bind(this);
@@ -28,7 +28,6 @@ class MatCanva extends Component{
     }
     manageChange(e){
        var data = JSON.parse(e.data);
-       console.log(data);
        if(data.id != id){
           if(!(data.id in this.otherClientsLP) || data.first){
                this.otherClientsLP[data.id] = {x:data.x, y:data.y}
@@ -36,7 +35,7 @@ class MatCanva extends Component{
           this.drawer(this.otherClientsLP[data.id], data.x, data.y, data.color, data.brush_type);
            this.otherClientsLP[data.id]  = {x:data.x, y:data.y}
        }else
-            console.log('own drawing');
+            console.log('own drawing :)');
     }
     clicked(event){
         this.setState({draw: !this.state.draw});
@@ -64,8 +63,8 @@ class MatCanva extends Component{
         return (
             <div>
             <MuiThemeProvider>
-              <Paper style={this.props.style} zDepth={2} rounded={false} >
-                <Stage oncontentMousemove={this.moved} oncontentClick={this.clicked} width={this.props.style.width} height={this.props.style.height}>
+              <Paper zDepth={2} rounded={false} ref="place" >
+                <Stage oncontentMousemove={this.moved} oncontentClick={this.clicked} width={document.body.offsetWidth} height={this.props.style.height}>
 
       <Layer ref="mycanva"/>             
 
